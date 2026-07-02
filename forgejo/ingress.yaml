@@ -3,22 +3,20 @@ kind: Ingress
 metadata:
   name: forgejo-ingress
   namespace: forgejo
-  annotations:
-    traefik.ingress.kubernetes.io/router.tls.certresolver: letsencrypt
 spec:
   ingressClassName: traefik
-  tls:
-  - hosts:
-    - git.example.com
-    secretName: forgejo-tls
   rules:
   - host: git.example.com
     http:
       paths:
-      - path: /
-        pathType: Prefix
-        backend:
+      - backend:
           service:
             name: forgejo
             port:
               number: 3000
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - git.example.com
+    secretName: forgejo-tls

@@ -1,18 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    deployment.kubernetes.io/revision: "1"
-    kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app":"uptime-kuma"},"name":"uptime-kuma","namespace":"monitoring"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"uptime-kuma"}},"template":{"metadata":{"labels":{"app":"uptime-kuma"}},"spec":{"containers":[{"image":"louislam/uptime-kuma:1","name":"uptime-kuma","ports":[{"containerPort":3001,"name":"http"}],"resources":{"limits":{"cpu":"200m","memory":"256Mi"},"requests":{"cpu":"50m","memory":"128Mi"}},"volumeMounts":[{"mountPath":"/app/data","name":"uptime-kuma-data"}]}],"volumes":[{"name":"uptime-kuma-data","persistentVolumeClaim":{"claimName":"uptime-kuma-data"}}]}}}}
   labels:
     app: uptime-kuma
   name: uptime-kuma
   namespace: monitoring
 spec:
-  progressDeadlineSeconds: 600
   replicas: 1
-  revisionHistoryLimit: 10
   selector:
     matchLabels:
       app: uptime-kuma
@@ -55,23 +49,3 @@ spec:
       - name: uptime-kuma-data
         persistentVolumeClaim:
           claimName: uptime-kuma-data
-status:
-  availableReplicas: 1
-  conditions:
-  - lastTransitionTime: "2026-06-28T14:28:13Z"
-    lastUpdateTime: "2026-06-28T14:28:56Z"
-    message: ReplicaSet "uptime-kuma-7b9db4c6c7" has successfully progressed.
-    reason: NewReplicaSetAvailable
-    status: "True"
-    type: Progressing
-  - lastTransitionTime: "2026-07-02T03:56:46Z"
-    lastUpdateTime: "2026-07-02T03:56:46Z"
-    message: Deployment has minimum availability.
-    reason: MinimumReplicasAvailable
-    status: "True"
-    type: Available
-  observedGeneration: 3
-  readyReplicas: 1
-  replicas: 1
-  terminatingReplicas: 0
-  updatedReplicas: 1
