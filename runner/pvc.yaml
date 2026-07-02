@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   annotations:
     kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"v1","kind":"PersistentVolumeClaim","metadata":{"annotations":{},"name":"forgejo-data","namespace":"forgejo"},"spec":{"accessModes":["ReadWriteOnce"],"resources":{"requests":{"storage":"10Gi"}},"storageClassName":"local-path"}}
+      {"apiVersion":"v1","kind":"PersistentVolumeClaim","metadata":{"annotations":{},"name":"runner-data","namespace":"runner"},"spec":{"accessModes":["ReadWriteOnce"],"resources":{"requests":{"storage":"1Gi"}},"storageClassName":"local-path"}}
     pv.kubernetes.io/bind-completed: "yes"
     pv.kubernetes.io/bound-by-controller: "yes"
     volume.beta.kubernetes.io/storage-provisioner: rancher.io/local-path
@@ -11,20 +11,20 @@ metadata:
     volume.kubernetes.io/storage-provisioner: rancher.io/local-path
   finalizers:
   - kubernetes.io/pvc-protection
-  name: forgejo-data
-  namespace: forgejo
+  name: runner-data
+  namespace: runner
 spec:
   accessModes:
   - ReadWriteOnce
   resources:
     requests:
-      storage: 10Gi
+      storage: 1Gi
   storageClassName: local-path
   volumeMode: Filesystem
-  volumeName: pvc-1bf427f8-126a-40b0-af36-d4f37e1dab27
+  volumeName: pvc-23aa1223-5aa8-4411-9fb7-39b2999e9ef4
 status:
   accessModes:
   - ReadWriteOnce
   capacity:
-    storage: 10Gi
+    storage: 1Gi
   phase: Bound

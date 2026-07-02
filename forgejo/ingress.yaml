@@ -1,6 +1,11 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"Ingress","metadata":{"annotations":{"traefik.ingress.kubernetes.io/router.tls.certresolver":"letsencrypt"},"name":"forgejo-ingress","namespace":"forgejo"},"spec":{"ingressClassName":"traefik","rules":[{"host":"git.example.com","http":{"paths":[{"backend":{"service":{"name":"forgejo","port":{"number":3000}}},"path":"/","pathType":"Prefix"}]}}],"tls":[{"hosts":["git.example.com"]}]}}
+    traefik.ingress.kubernetes.io/router.tls.certresolver: letsencrypt
+  generation: 1
   name: forgejo-ingress
   namespace: forgejo
 spec:
@@ -19,4 +24,5 @@ spec:
   tls:
   - hosts:
     - git.example.com
-    secretName: forgejo-tls
+status:
+  loadBalancer: {}
