@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hello-devops-ingress
+  namespace: monitoring
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: hello.localhost
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: hello-devops
+            port:
+              number: 8000

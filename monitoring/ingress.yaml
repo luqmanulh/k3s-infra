@@ -1,0 +1,79 @@
+apiVersion: v1
+items:
+- apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"Ingress","metadata":{"annotations":{},"name":"grafana-ingress","namespace":"monitoring"},"spec":{"ingressClassName":"traefik","rules":[{"host":"grafana.localhost","http":{"paths":[{"backend":{"service":{"name":"grafana","port":{"number":3000}}},"path":"/","pathType":"Prefix"}]}}]}}
+    name: grafana-ingress
+    namespace: monitoring
+  spec:
+    ingressClassName: traefik
+    rules:
+    - host: grafana.localhost
+      http:
+        paths:
+        - backend:
+            service:
+              name: grafana
+              port:
+                number: 3000
+          path: /
+          pathType: Prefix
+  status:
+    loadBalancer:
+      ingress:
+      - ip: 192.168.18.9
+- apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"Ingress","metadata":{"annotations":{},"name":"prometheus-ingress","namespace":"monitoring"},"spec":{"ingressClassName":"traefik","rules":[{"host":"prometheus.localhost","http":{"paths":[{"backend":{"service":{"name":"prometheus","port":{"number":9090}}},"path":"/","pathType":"Prefix"}]}}]}}
+    name: prometheus-ingress
+    namespace: monitoring
+  spec:
+    ingressClassName: traefik
+    rules:
+    - host: prometheus.localhost
+      http:
+        paths:
+        - backend:
+            service:
+              name: prometheus
+              port:
+                number: 9090
+          path: /
+          pathType: Prefix
+  status:
+    loadBalancer:
+      ingress:
+      - ip: 192.168.18.9
+- apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"Ingress","metadata":{"annotations":{},"name":"uptime-kuma-ingress","namespace":"monitoring"},"spec":{"ingressClassName":"traefik","rules":[{"host":"monitor.localhost","http":{"paths":[{"backend":{"service":{"name":"uptime-kuma","port":{"number":3001}}},"path":"/","pathType":"Prefix"}]}}]}}
+    name: uptime-kuma-ingress
+    namespace: monitoring
+  spec:
+    ingressClassName: traefik
+    rules:
+    - host: monitor.localhost
+      http:
+        paths:
+        - backend:
+            service:
+              name: uptime-kuma
+              port:
+                number: 3001
+          path: /
+          pathType: Prefix
+  status:
+    loadBalancer:
+      ingress:
+      - ip: 192.168.18.9
+kind: List
+metadata:
