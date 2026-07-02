@@ -11,7 +11,7 @@ items:
   spec:
     ingressClassName: traefik
     rules:
-    - host: grafana.localhost
+    - host: grafana.example.com
       http:
         paths:
         - backend:
@@ -36,7 +36,7 @@ items:
   spec:
     ingressClassName: traefik
     rules:
-    - host: prometheus.localhost
+    - host: prometheus.example.com
       http:
         paths:
         - backend:
@@ -61,7 +61,7 @@ items:
   spec:
     ingressClassName: traefik
     rules:
-    - host: monitor.localhost
+    - host: monitor.example.com
       http:
         paths:
         - backend:

@@ -32,10 +32,10 @@ k3s-monitoring/
 
 | Service | URL |
 |---------|-----|
-| Forgejo | `http://git.localhost/` |
-| Grafana | `http://grafana.localhost/` (admin/admin) |
-| Prometheus | `http://prometheus.localhost/` |
-| Uptime Kuma | `http://monitor.localhost/` |
+| Forgejo | `http://git.example.com/` |
+| Grafana | `http://grafana.example.com/` (admin/admin) |
+| Prometheus | `http://prometheus.example.com/` |
+| Uptime Kuma | `http://monitor.example.com/` |
 | hello-devops | `http://hello.localhost/` |
 
 ## Deploy Semua

@@ -9,7 +9,7 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-  - host: git.localhost
+  - host: git.example.com
     http:
       paths:
       - backend:

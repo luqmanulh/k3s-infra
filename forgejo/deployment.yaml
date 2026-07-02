@@ -4,7 +4,7 @@ metadata:
   annotations:
     deployment.kubernetes.io/revision: "5"
     kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"forgejo","namespace":"forgejo"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"forgejo"}},"template":{"metadata":{"labels":{"app":"forgejo"}},"spec":{"containers":[{"env":[{"name":"USER_UID","value":"1000"},{"name":"USER_GID","value":"1000"}],"envFrom":[{"secretRef":{"name":"forgejo-secrets"}}],"image":"codeberg.org/forgejo/forgejo:15","name":"forgejo","ports":[{"containerPort":3000,"name":"http"},{"containerPort":22,"name":"ssh"}],"resources":{"limits":{"cpu":"500m","memory":"512Mi"},"requests":{"cpu":"250m","memory":"256Mi"}},"volumeMounts":[{"mountPath":"/data","name":"data"},{"mountPath":"/etc/localtime","name":"localtime","readOnly":true}]}],"volumes":[{"name":"data","persistentVolumeClaim":{"claimName":"forgejo-data"}},{"hostPath":{"path":"/etc/localtime","type":"File"},"name":"localtime"}]}}}}
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"forgejo","namespace":"forgejo"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"forgejo"}},"template":{"metadata":{"labels":{"app":"forgejo"}},"spec":{"containers":[{"env":[{"name":"USER_UID","value":"1000"},{"name":"USER_GID","value":"1000"}],"envFrom":[{"secretRef":{"name":"forgejo-secrets"}}],"image":"data.forgejo.org/forgejo/forgejo:15","name":"forgejo","ports":[{"containerPort":3000,"name":"http"},{"containerPort":22,"name":"ssh"}],"resources":{"limits":{"cpu":"500m","memory":"512Mi"},"requests":{"cpu":"250m","memory":"256Mi"}},"volumeMounts":[{"mountPath":"/data","name":"data"},{"mountPath":"/etc/localtime","name":"localtime","readOnly":true}]}],"volumes":[{"name":"data","persistentVolumeClaim":{"claimName":"forgejo-data"}},{"hostPath":{"path":"/etc/localtime","type":"File"},"name":"localtime"}]}}}}
   name: forgejo
   namespace: forgejo
 spec:
@@ -35,7 +35,7 @@ spec:
         envFrom:
         - secretRef:
             name: forgejo-secrets
-        image: codeberg.org/forgejo/forgejo:15
+        image: data.forgejo.org/forgejo/forgejo:15
         imagePullPolicy: IfNotPresent
         name: forgejo
         ports:
