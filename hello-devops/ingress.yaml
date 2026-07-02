@@ -3,18 +3,16 @@ kind: Ingress
 metadata:
   name: hello-devops-ingress
   namespace: monitoring
-  annotations:
-    traefik.ingress.kubernetes.io/router.tls.certresolver: letsencrypt
 spec:
   ingressClassName: traefik
   rules:
-  - host: hello.localhost
+  - host: hello.example.com
     http:
       paths:
-      - path: /
-        pathType: Prefix
-        backend:
+      - backend:
           service:
             name: hello-devops
             port:
               number: 8000
+        path: /
+        pathType: Prefix
