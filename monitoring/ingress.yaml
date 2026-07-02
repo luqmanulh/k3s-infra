@@ -5,7 +5,8 @@ items:
   metadata:
     annotations:
       kubectl.kubernetes.io/last-applied-configuration: |
-        {"apiVersion":"networking.k8s.io/v1","kind":"Ingress","metadata":{"annotations":{},"name":"grafana-ingress","namespace":"monitoring"},"spec":{"ingressClassName":"traefik","rules":[{"host":"grafana.localhost","http":{"paths":[{"backend":{"service":{"name":"grafana","port":{"number":3000}}},"path":"/","pathType":"Prefix"}]}}]}}
+        {"apiVersion":"networking.k8s.io/v1","kind":"Ingress","metadata":{"annotations":{},"name":"grafana-ingress","namespace":"monitoring"},"spec":{"ingressClassName":"traefik","rules":[{"host":"grafana.localhost","http":{"paths":[{"backend":{"service":{"name":"grafana","port":{"number":3000}}},"path":"/","pathType":"Prefix"}]}}]},"status":{"loadBalancer":{"ingress":[{"ip":"192.168.18.9"}]}}}
+      traefik.ingress.kubernetes.io/router.tls.certresolver: letsencrypt
     name: grafana-ingress
     namespace: monitoring
   spec:
@@ -21,16 +22,44 @@ items:
                 number: 3000
           path: /
           pathType: Prefix
-  status:
+    tls:
+    - hosts:
+      - grafana.example.com
+      secretName: grafana-tls
     loadBalancer:
       ingress:
-      - ip: 192.168.18.9
+      - ip: 10.11.7.131
 - apiVersion: networking.k8s.io/v1
   kind: Ingress
   metadata:
     annotations:
       kubectl.kubernetes.io/last-applied-configuration: |
-        {"apiVersion":"networking.k8s.io/v1","kind":"Ingress","metadata":{"annotations":{},"name":"prometheus-ingress","namespace":"monitoring"},"spec":{"ingressClassName":"traefik","rules":[{"host":"prometheus.localhost","http":{"paths":[{"backend":{"service":{"name":"prometheus","port":{"number":9090}}},"path":"/","pathType":"Prefix"}]}}]}}
+        {"apiVersion":"networking.k8s.io/v1","kind":"Ingress","metadata":{"annotations":{},"name":"hello-devops-ingress","namespace":"monitoring"},"spec":{"ingressClassName":"traefik","rules":[{"host":"hello.localhost","http":{"paths":[{"backend":{"service":{"name":"hello-devops","port":{"number":8000}}},"path":"/","pathType":"Prefix"}]}}]}}
+    name: hello-devops-ingress
+    namespace: monitoring
+  spec:
+    ingressClassName: traefik
+    rules:
+    - host: hello.localhost
+      http:
+        paths:
+        - backend:
+            service:
+              name: hello-devops
+              port:
+                number: 8000
+          path: /
+          pathType: Prefix
+    loadBalancer:
+      ingress:
+      - ip: 10.11.7.131
+- apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"Ingress","metadata":{"annotations":{},"name":"prometheus-ingress","namespace":"monitoring"},"spec":{"ingressClassName":"traefik","rules":[{"host":"prometheus.localhost","http":{"paths":[{"backend":{"service":{"name":"prometheus","port":{"number":9090}}},"path":"/","pathType":"Prefix"}]}}]},"status":{"loadBalancer":{"ingress":[{"ip":"192.168.18.9"}]}}}
+      traefik.ingress.kubernetes.io/router.tls.certresolver: letsencrypt
     name: prometheus-ingress
     namespace: monitoring
   spec:
@@ -46,16 +75,20 @@ items:
                 number: 9090
           path: /
           pathType: Prefix
-  status:
+    tls:
+    - hosts:
+      - prometheus.example.com
+      secretName: prometheus-tls
     loadBalancer:
       ingress:
-      - ip: 192.168.18.9
+      - ip: 10.11.7.131
 - apiVersion: networking.k8s.io/v1
   kind: Ingress
   metadata:
     annotations:
       kubectl.kubernetes.io/last-applied-configuration: |
-        {"apiVersion":"networking.k8s.io/v1","kind":"Ingress","metadata":{"annotations":{},"name":"uptime-kuma-ingress","namespace":"monitoring"},"spec":{"ingressClassName":"traefik","rules":[{"host":"monitor.localhost","http":{"paths":[{"backend":{"service":{"name":"uptime-kuma","port":{"number":3001}}},"path":"/","pathType":"Prefix"}]}}]}}
+        {"apiVersion":"networking.k8s.io/v1","kind":"Ingress","metadata":{"annotations":{},"name":"uptime-kuma-ingress","namespace":"monitoring"},"spec":{"ingressClassName":"traefik","rules":[{"host":"monitor.localhost","http":{"paths":[{"backend":{"service":{"name":"uptime-kuma","port":{"number":3001}}},"path":"/","pathType":"Prefix"}]}}]},"status":{"loadBalancer":{"ingress":[{"ip":"192.168.18.9"}]}}}
+      traefik.ingress.kubernetes.io/router.tls.certresolver: letsencrypt
     name: uptime-kuma-ingress
     namespace: monitoring
   spec:
@@ -71,9 +104,12 @@ items:
                 number: 3001
           path: /
           pathType: Prefix
-  status:
+    tls:
+    - hosts:
+      - monitor.example.com
+      secretName: monitor-tls
     loadBalancer:
       ingress:
-      - ip: 192.168.18.9
+      - ip: 10.11.7.131
 kind: List
 metadata:
