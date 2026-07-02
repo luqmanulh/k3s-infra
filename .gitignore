@@ -1,6 +1,22 @@
+# Kubernetes Secrets (contains base64-encoded passwords)
+*-secret.yaml
+secret.yaml
+
 # Backup files
 *.backup
 *.bak
+*.db
 
-# Restore pod files (temporary)
+# Temporary restore pods
 *-restore-pod.yaml
+*-restore.yaml
+
+# Environment files
+.env
+*.env
+!*.env.example
+
+# IDE
+.idea/
+.vscode/
+*.swp
