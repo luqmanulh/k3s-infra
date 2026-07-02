@@ -3,6 +3,8 @@ kind: Ingress
 metadata:
   name: hello-devops-ingress
   namespace: monitoring
+  annotations:
+    traefik.ingress.kubernetes.io/router.tls.certresolver: letsencrypt
 spec:
   ingressClassName: traefik
   rules:
