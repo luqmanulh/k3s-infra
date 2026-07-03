@@ -14,20 +14,22 @@ spec:
         app: forgejo
     spec:
       containers:
-      - env:
-        - name: USER_UID
-          value: '1000'
-          value: '1000'
-        envFrom:
-        - secretRef:
-            name: forgejo-secrets
+      - name: forgejo
         image: data.forgejo.org/forgejo/forgejo:15
         imagePullPolicy: IfNotPresent
-        name: forgejo
         ports:
         - containerPort: 3000
           name: http
+        - containerPort: 22
           name: ssh
+        env:
+        - name: USER_UID
+          value: "1000"
+        - name: USER_GID
+          value: "1000"
+        envFrom:
+        - secretRef:
+            name: forgejo-secrets
         resources:
           limits:
             cpu: 500m
@@ -36,14 +38,16 @@ spec:
             cpu: 250m
             memory: 256Mi
         volumeMounts:
-        - mountPath: /data
-          name: data
-          name: localtime
+        - name: data
+          mountPath: /data
+        - name: localtime
+          mountPath: /etc/localtime
           readOnly: true
       volumes:
       - name: data
         persistentVolumeClaim:
           claimName: forgejo-data
+      - name: localtime
+        hostPath:
           path: /etc/localtime
           type: File
-        name: localtime
