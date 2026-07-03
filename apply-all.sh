@@ -33,9 +33,11 @@ kubectl apply -f monitoring/uptime-kuma/uptime-kuma-pvc.yaml
 kubectl apply -f monitoring/uptime-kuma/uptime-kuma-deployment.yaml
 kubectl apply -f monitoring/uptime-kuma/uptime-kuma-service.yaml
 kubectl apply -f monitoring/uptime-kuma/uptime-kuma-ingress.yaml
-kubectl apply -f monitoring/hello-devops/hello-devops-deployment.yaml
-kubectl apply -f monitoring/hello-devops/hello-devops-service.yaml
-kubectl apply -f monitoring/hello-devops/hello-devops-ingress.yaml
+
+echo "=== Apps ==="
+kubectl apply -f apps/hello-devops/hello-devops-deployment.yaml
+kubectl apply -f apps/hello-devops/hello-devops-service.yaml
+kubectl apply -f apps/hello-devops/hello-devops-ingress.yaml
 
 echo "=== Runner ==="
 kubectl apply -f runner/deployer-sa.yaml
