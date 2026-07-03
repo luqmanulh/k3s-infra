@@ -19,12 +19,13 @@ k3s-infra/
 │   ├── ingress.yaml
 │   ├── pvc.yaml
 │   └── ssh-tcp-ingress.yaml
+├── apps/
+│   └── hello-devops/           # Sample App (CI/CD demo)
 ├── monitoring/
 │   ├── grafana/                # Grafana Dashboard
 │   ├── prometheus/             # Prometheus Metrics
 │   ├── node-exporter/          # Node Metrics Exporter
-│   ├── uptime-kuma/            # Uptime Monitoring
-│   └── hello-devops/           # Sample App (CI/CD demo)
+│   └── uptime-kuma/            # Uptime Monitoring
 ├── runner/                     # Forgejo Actions Runner (DinD + kubectl)
 │   ├── deployment.yaml
 │   ├── pvc.yaml
@@ -60,7 +61,7 @@ kubectl apply -f monitoring/grafana/
 kubectl apply -f monitoring/prometheus/
 kubectl apply -f monitoring/node-exporter/
 kubectl apply -f monitoring/uptime-kuma/
-kubectl apply -f monitoring/hello-devops/
+kubectl apply -f apps/hello-devops/
 kubectl apply -f runner/
 ```
 
