@@ -32,8 +32,5 @@ data:
       level: INFO
 kind: ConfigMap
 metadata:
-  annotations:
-    kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"v1","data":{"traefik.yml":"entryPoints:\n  web:\n    address: \":80\"\n    http:\n      redirections:\n        entryPoint:\n          to: websecure\n          scheme: https\n  websecure:\n    address: \":443\"\n  ssh:\n    address: \":22\"\ncertificatesResolvers:\n  letsencrypt:\n    acme:\n      email: hakimqwertyuiop23@gmail.com\n      storage: /data/acme.json\n      httpChallenge:\n        entryPoint: web\nproviders:\n  kubernetesIngress: {}\n  kubernetesCRD:\n    allowEmptyServices: true\napi:\n  dashboard: true\nmetrics:\n  prometheus: true\nlog:\n  level: INFO\n"},"kind":"ConfigMap","metadata":{"annotations":{},"name":"traefik-config","namespace":"kube-system"}}
   name: traefik-config
   namespace: kube-system

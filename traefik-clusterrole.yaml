@@ -1,9 +1,6 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  annotations:
-    kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"rbac.authorization.k8s.io/v1","kind":"ClusterRole","metadata":{"annotations":{},"name":"traefik"},"rules":[{"apiGroups":[""],"resources":["pods","services","endpoints","secrets","configmaps"],"verbs":["get","list","watch"]},{"apiGroups":["networking.k8s.io"],"resources":["ingresses","ingressclasses"],"verbs":["get","list","watch"]},{"apiGroups":["traefik.io"],"resources":["ingressroutes","ingressroutetcps","middlewares","tlsoptions","tlsstores","serverstransports"],"verbs":["get","list","watch"]},{"apiGroups":["discovery.k8s.io"],"resources":["endpointslices"],"verbs":["get","list","watch"]}]}
   name: traefik
 rules:
 - apiGroups:

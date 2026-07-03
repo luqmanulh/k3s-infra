@@ -1,38 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    deployment.kubernetes.io/revision: "2"
-    kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"forgejo","namespace":"forgejo"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"forgejo"}},"template":{"metadata":{"labels":{"app":"forgejo"}},"spec":{"containers":[{"env":[{"name":"USER_UID","value":"1000"},{"name":"USER_GID","value":"1000"}],"envFrom":[{"secretRef":{"name":"forgejo-secrets"}}],"image":"data.forgejo.org/forgejo/forgejo:15","name":"forgejo","ports":[{"containerPort":3000,"name":"http"},{"containerPort":22,"name":"ssh"}],"resources":{"limits":{"cpu":"500m","memory":"512Mi"},"requests":{"cpu":"250m","memory":"256Mi"}},"volumeMounts":[{"mountPath":"/data","name":"data"},{"mountPath":"/etc/localtime","name":"localtime","readOnly":true}]}],"volumes":[{"name":"data","persistentVolumeClaim":{"claimName":"forgejo-data"}},{"hostPath":{"path":"/etc/localtime","type":"File"},"name":"localtime"}]}}}}
-  generation: 6
   name: forgejo
   namespace: forgejo
 spec:
-  progressDeadlineSeconds: 600
   replicas: 1
-  revisionHistoryLimit: 10
   selector:
     matchLabels:
       app: forgejo
-  strategy:
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
-    type: RollingUpdate
   template:
     metadata:
-      annotations:
-        kubectl.kubernetes.io/restartedAt: "2026-07-02T21:43:15+08:00"
       labels:
         app: forgejo
     spec:
       containers:
       - env:
         - name: USER_UID
-          value: "1000"
+          value: '1000'
         - name: USER_GID
-          value: "1000"
+          value: '1000'
         envFrom:
         - secretRef:
             name: forgejo-secrets
@@ -53,19 +39,12 @@ spec:
           requests:
             cpu: 250m
             memory: 256Mi
-        terminationMessagePath: /dev/termination-log
-        terminationMessagePolicy: File
         volumeMounts:
         - mountPath: /data
           name: data
         - mountPath: /etc/localtime
           name: localtime
           readOnly: true
-      dnsPolicy: ClusterFirst
-      restartPolicy: Always
-      schedulerName: default-scheduler
-      securityContext: {}
-      terminationGracePeriodSeconds: 30
       volumes:
       - name: data
         persistentVolumeClaim:
@@ -74,23 +53,3 @@ spec:
           path: /etc/localtime
           type: File
         name: localtime
-status:
-  availableReplicas: 1
-  conditions:
-  - lastTransitionTime: "2026-07-02T12:40:37Z"
-    lastUpdateTime: "2026-07-02T12:40:37Z"
-    message: Deployment has minimum availability.
-    reason: MinimumReplicasAvailable
-    status: "True"
-    type: Available
-  - lastTransitionTime: "2026-07-02T12:38:34Z"
-    lastUpdateTime: "2026-07-02T13:43:17Z"
-    message: ReplicaSet "forgejo-78778c464c" has successfully progressed.
-    reason: NewReplicaSetAvailable
-    status: "True"
-    type: Progressing
-  observedGeneration: 6
-  readyReplicas: 1
-  replicas: 1
-  terminatingReplicas: 0
-  updatedReplicas: 1

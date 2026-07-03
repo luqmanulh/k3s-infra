@@ -1,10 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    deployment.kubernetes.io/revision: "9"
-    kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"actions-runner","namespace":"runner"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"actions-runner"}},"template":{"metadata":{"labels":{"app":"actions-runner"}},"spec":{"containers":[{"env":[{"name":"DOCKER_TLS_CERTDIR","value":""}],"image":"docker:dind","name":"dind","securityContext":{"privileged":true}},{"command":["/bin/sh","-c","until wget -qO- http://localhost:2375/_ping 2\u003e/dev/null | grep -q OK; do sleep 1; done\necho \"Registering runner with token ${RUNNER_TOKEN:0:20}...\"\nforgejo-runner register --no-interactive \\\n  --instance https://git.example.com \\\n  --token \"$RUNNER_TOKEN\" \\\n  --name \"k3s-runner-$(hostname)\" \\\n  --labels docker \\\n  2\u003e\u00261\necho \"Register exit code: $?\"\nsleep 2\necho \"Starting daemon...\"\nexec forgejo-runner daemon 2\u003e\u00261\n"],"env":[{"name":"DOCKER_HOST","value":"tcp://localhost:2375"},{"name":"RUNNER_TOKEN","valueFrom":{"secretKeyRef":{"key":"token","name":"runner-secret"}}}],"image":"data.forgejo.org/forgejo/runner:12","name":"runner","volumeMounts":[{"mountPath":"/data","name":"runner-data"},{"mountPath":"/home/runner/.kube","name":"kubeconfig"}]}],"restartPolicy":"Always","volumes":[{"name":"runner-data","persistentVolumeClaim":{"claimName":"runner-data"}},{"configMap":{"items":[{"key":"config","path":"config"}],"name":"kubeconfig"},"name":"kubeconfig"}]}}}}
   generation: 9
   name: actions-runner
   namespace: runner
@@ -23,7 +19,6 @@ spec:
   template:
     metadata:
       annotations:
-        kubectl.kubernetes.io/restartedAt: "2026-07-02T23:04:08+08:00"
       labels:
         app: actions-runner
     spec:
@@ -33,7 +28,6 @@ spec:
         image: docker:dind
         imagePullPolicy: IfNotPresent
         name: dind
-        resources: {}
         securityContext:
           privileged: true
         terminationMessagePath: /dev/termination-log
@@ -65,7 +59,6 @@ spec:
         image: data.forgejo.org/forgejo/runner:12
         imagePullPolicy: IfNotPresent
         name: runner
-        resources: {}
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
         volumeMounts:
@@ -89,23 +82,3 @@ spec:
             path: config
           name: kubeconfig
         name: kubeconfig
-status:
-  availableReplicas: 1
-  conditions:
-  - lastTransitionTime: "2026-07-02T13:05:14Z"
-    lastUpdateTime: "2026-07-02T13:05:14Z"
-    message: Deployment has minimum availability.
-    reason: MinimumReplicasAvailable
-    status: "True"
-    type: Available
-  - lastTransitionTime: "2026-07-02T12:47:50Z"
-    lastUpdateTime: "2026-07-02T15:04:16Z"
-    message: ReplicaSet "actions-runner-6698c59785" has successfully progressed.
-    reason: NewReplicaSetAvailable
-    status: "True"
-    type: Progressing
-  observedGeneration: 9
-  readyReplicas: 1
-  replicas: 1
-  terminatingReplicas: 0
-  updatedReplicas: 1

@@ -1,23 +1,23 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: forgejo-ingress
-  namespace: forgejo
+  name: uptime-kuma-ingress
+  namespace: monitoring
   annotations:
     traefik.ingress.kubernetes.io/router.tls.certresolver: letsencrypt
 spec:
   ingressClassName: traefik
   rules:
-  - host: git.example.com
+  - host: monitor.example.com
     http:
       paths:
       - backend:
           service:
-            name: forgejo
+            name: uptime-kuma
             port:
-              number: 3000
+              number: 3001
         path: /
         pathType: Prefix
   tls:
   - hosts:
-    - git.example.com
+    - monitor.example.com

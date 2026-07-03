@@ -1,23 +1,23 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: forgejo-ingress
-  namespace: forgejo
+  name: prometheus-ingress
+  namespace: monitoring
   annotations:
     traefik.ingress.kubernetes.io/router.tls.certresolver: letsencrypt
 spec:
   ingressClassName: traefik
   rules:
-  - host: git.example.com
+  - host: prometheus.example.com
     http:
       paths:
       - backend:
           service:
-            name: forgejo
+            name: prometheus
             port:
-              number: 3000
+              number: 9090
         path: /
         pathType: Prefix
   tls:
   - hosts:
-    - git.example.com
+    - prometheus.example.com
