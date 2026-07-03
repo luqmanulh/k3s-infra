@@ -1,53 +1,39 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  generation: 6
   name: traefik
   namespace: kube-system
 spec:
-  progressDeadlineSeconds: 600
   replicas: 1
-  revisionHistoryLimit: 10
   selector:
     matchLabels:
       app: traefik
-  strategy:
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
-    type: RollingUpdate
   template:
     metadata:
-      annotations:
       labels:
         app: traefik
     spec:
       containers:
-      - args:
-        - --configFile=/config/traefik.yml
+      - name: traefik
         image: docker.io/traefik:v3.7.4
-        imagePullPolicy: IfNotPresent
-        name: traefik
+        args:
+        - --configFile=/config/traefik.yml
         ports:
         - containerPort: 80
           name: web
+        - containerPort: 443
           name: websecure
+        - containerPort: 22
           name: ssh
-        terminationMessagePath: /dev/termination-log
-        terminationMessagePolicy: File
         volumeMounts:
-        - mountPath: /config
-          name: config
-          name: data
-      dnsPolicy: ClusterFirst
-      restartPolicy: Always
-      schedulerName: default-scheduler
-      securityContext: {}
-      terminationGracePeriodSeconds: 30
+        - name: config
+          mountPath: /config
+        - name: data
+          mountPath: /data
       volumes:
-      - configMap:
-          defaultMode: 420
+      - name: config
+        configMap:
           name: traefik-config
-        name: config
+      - name: data
         persistentVolumeClaim:
           claimName: traefik-data

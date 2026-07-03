@@ -3,24 +3,17 @@ kind: ClusterRole
 metadata:
   name: traefik
 rules:
-- apiGroups:
-  - ""
-  resources:
-  - pods
-  verbs:
-  - get
-  - networking.k8s.io
-  resources:
-  - ingresses
-  verbs:
-  - get
-  - traefik.io
-  resources:
-  - ingressroutes
-  verbs:
-  - get
-  - discovery.k8s.io
-  resources:
-  - endpointslices
-  verbs:
-  - get
+- apiGroups: [""]
+  resources: [pods, services, endpoints, secrets, configmaps, nodes]
+  verbs: [get, list, watch]
+- apiGroups: ["networking.k8s.io"]
+  resources: [ingresses, ingressclasses]
+  verbs: [get, list, watch]
+- apiGroups: ["traefik.io"]
+  resources: [ingressroutes, ingressroutetcps, middlewares, middlewaretcps,
+              tlsoptions, tlsstores, serverstransports, serverstransporttcps,
+              traefikservices, ingressrouteudps]
+  verbs: [get, list, watch]
+- apiGroups: ["discovery.k8s.io"]
+  resources: [endpointslices]
+  verbs: [get, list, watch]
