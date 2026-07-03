@@ -1,22 +1,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  labels:
-    app: node-exporter
   name: node-exporter
   namespace: monitoring
+  labels:
+    app: node-exporter
 spec:
-  - 10.43.161.246
-  internalTrafficPolicy: Cluster
-  ipFamilies:
-  - IPv4
-  ipFamilyPolicy: SingleStack
   ports:
   - name: metrics
     port: 9100
-    protocol: TCP
     targetPort: 9100
   selector:
     app: node-exporter
-  sessionAffinity: None
   type: ClusterIP

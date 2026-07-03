@@ -31,19 +31,13 @@ spec:
         ports:
         - containerPort: 80
           name: web
-          protocol: TCP
-        - containerPort: 443
           name: websecure
-          protocol: TCP
-        - containerPort: 22
           name: ssh
-          protocol: TCP
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
         volumeMounts:
         - mountPath: /config
           name: config
-        - mountPath: /data
           name: data
       dnsPolicy: ClusterFirst
       restartPolicy: Always
@@ -55,6 +49,5 @@ spec:
           defaultMode: 420
           name: traefik-config
         name: config
-      - name: data
         persistentVolumeClaim:
           claimName: traefik-data

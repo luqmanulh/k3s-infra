@@ -26,17 +26,12 @@ spec:
       containers:
       - args:
         - --config.file=/etc/prometheus/prometheus.yml
-        - --storage.tsdb.path=/prometheus
-        - --storage.tsdb.retention.time=15d
-        - --web.console.libraries=/usr/share/prometheus/console_libraries
-        - --web.console.templates=/usr/share/prometheus/consoles
         image: prom/prometheus:v2.51.0
         imagePullPolicy: IfNotPresent
         name: prometheus
         ports:
         - containerPort: 9090
           name: web
-          protocol: TCP
         resources:
           limits:
             cpu: 500m
@@ -49,7 +44,6 @@ spec:
         volumeMounts:
         - mountPath: /etc/prometheus
           name: config
-        - mountPath: /prometheus
           name: data
       dnsPolicy: ClusterFirst
       restartPolicy: Always
@@ -63,6 +57,5 @@ spec:
           defaultMode: 420
           name: prometheus-config
         name: config
-      - name: data
         persistentVolumeClaim:
           claimName: prometheus-data

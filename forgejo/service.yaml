@@ -4,21 +4,12 @@ metadata:
   name: forgejo
   namespace: forgejo
 spec:
-  - 10.43.90.141
-  internalTrafficPolicy: Cluster
-  ipFamilies:
-  - IPv4
-  ipFamilyPolicy: SingleStack
   ports:
   - name: http
     port: 3000
-    protocol: TCP
     targetPort: 3000
-  - name: ssh
     port: 22
-    protocol: TCP
     targetPort: 22
   selector:
     app: forgejo
-  sessionAffinity: None
   type: ClusterIP

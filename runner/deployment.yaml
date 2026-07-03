@@ -32,10 +32,7 @@ spec:
           privileged: true
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
-      - command:
         - /bin/sh
-        - -c
-        - |
           until wget -qO- http://localhost:2375/_ping 2>/dev/null | grep -q OK; do sleep 1; done
           echo "Registering runner with token ${RUNNER_TOKEN:0:20}..."
           forgejo-runner register --no-interactive \
@@ -51,7 +48,6 @@ spec:
         env:
         - name: DOCKER_HOST
           value: tcp://localhost:2375
-        - name: RUNNER_TOKEN
           valueFrom:
             secretKeyRef:
               key: token
@@ -64,7 +60,6 @@ spec:
         volumeMounts:
         - mountPath: /data
           name: runner-data
-        - mountPath: /home/runner/.kube
           name: kubeconfig
       dnsPolicy: ClusterFirst
       restartPolicy: Always
@@ -75,7 +70,6 @@ spec:
       - name: runner-data
         persistentVolumeClaim:
           claimName: runner-data
-      - configMap:
           defaultMode: 420
           items:
           - key: config

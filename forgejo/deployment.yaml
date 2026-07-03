@@ -17,7 +17,6 @@ spec:
       - env:
         - name: USER_UID
           value: '1000'
-        - name: USER_GID
           value: '1000'
         envFrom:
         - secretRef:
@@ -28,10 +27,7 @@ spec:
         ports:
         - containerPort: 3000
           name: http
-          protocol: TCP
-        - containerPort: 22
           name: ssh
-          protocol: TCP
         resources:
           limits:
             cpu: 500m
@@ -42,14 +38,12 @@ spec:
         volumeMounts:
         - mountPath: /data
           name: data
-        - mountPath: /etc/localtime
           name: localtime
           readOnly: true
       volumes:
       - name: data
         persistentVolumeClaim:
           claimName: forgejo-data
-      - hostPath:
           path: /etc/localtime
           type: File
         name: localtime

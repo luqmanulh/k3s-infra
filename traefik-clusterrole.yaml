@@ -7,46 +7,20 @@ rules:
   - ""
   resources:
   - pods
-  - services
-  - endpoints
-  - secrets
-  - configmaps
-  - nodes
   verbs:
   - get
-  - list
-  - watch
-- apiGroups:
   - networking.k8s.io
   resources:
   - ingresses
-  - ingressclasses
   verbs:
   - get
-  - list
-  - watch
-- apiGroups:
   - traefik.io
   resources:
   - ingressroutes
-  - ingressroutetcps
-  - middlewares
-  - tlsoptions
-  - tlsstores
-  - serverstransports
-  - middlewaretcps
-  - traefikservices
-  - ingressrouteudps
-  - serverstransporttcps
   verbs:
   - get
-  - list
-  - watch
-- apiGroups:
   - discovery.k8s.io
   resources:
   - endpointslices
   verbs:
   - get
-  - list
-  - watch
