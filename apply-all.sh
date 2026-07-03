@@ -3,12 +3,12 @@
 set -e
 
 echo "=== Traefik ==="
-kubectl apply -f traefik-config.yaml
-kubectl apply -f traefik-deployment.yaml
-kubectl apply -f traefik-service.yaml
-kubectl apply -f traefik-ingressclass.yaml
-kubectl apply -f traefik-clusterrole.yaml
-kubectl apply -f traefik-clusterrolebinding.yaml
+kubectl apply -f traefik/traefik-config.yaml
+kubectl apply -f traefik/traefik-deployment.yaml
+kubectl apply -f traefik/traefik-service.yaml
+kubectl apply -f traefik/traefik-ingressclass.yaml
+kubectl apply -f traefik/traefik-clusterrole.yaml
+kubectl apply -f traefik/traefik-clusterrolebinding.yaml
 
 echo "=== Forgejo ==="
 kubectl apply -f forgejo/pvc.yaml
