@@ -18,11 +18,14 @@ spec:
       containers:
       - name: grafana
         image: grafana/grafana:13.1.0
+        envFrom:
+        - secretRef:
+            name: grafana-secrets
         env:
-        - name: GF_SECURITY_ADMIN_USER
-          value: admin
+        - name: GRAFANA_DOMAIN
+          value: GRAFANA_DOMAIN_PLACEHOLDER
         - name: GF_SERVER_ROOT_URL
-          value: https://grafana.example.com
+          value: https://$(GRAFANA_DOMAIN)
         ports:
         - containerPort: 3000
           name: http

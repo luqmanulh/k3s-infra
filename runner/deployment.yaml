@@ -24,6 +24,8 @@ spec:
       - name: runner
         image: data.forgejo.org/forgejo/runner:12
         env:
+        - name: FORGEJO_DOMAIN
+          value: FORGEJO_DOMAIN_PLACEHOLDER
         - name: DOCKER_HOST
           value: tcp://172.17.0.1:2375
         - name: RUNNER_TOKEN
@@ -38,7 +40,7 @@ spec:
           until wget -qO- http://172.17.0.1:2375/_ping 2>/dev/null | grep -q OK; do sleep 1; done
           echo "Registering runner..."
           forgejo-runner register --no-interactive \
-            --instance https://git.example.com \
+            --instance https://$FORGEJO_DOMAIN \
             --token "$RUNNER_TOKEN" \
             --name "k3s-runner-$(hostname)" \
             --labels docker \

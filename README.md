@@ -50,19 +50,21 @@ k3s-infra/
 
 ## Deploy
 
+Sebelum melakukan deploy, pastikan Anda menyalin file environment dan mengisinya dengan kredensial yang valid:
 ```bash
-# Semua service
-./apply-all.sh
+cp domains.env.example domains.env
+cp secrets.env.example secrets.env
+# Edit file domains.env dan secrets.env
+```
 
-# Atau per-service
-kubectl apply -f traefik/
-kubectl apply -f forgejo/
-kubectl apply -f monitoring/grafana/
-kubectl apply -f monitoring/prometheus/
-kubectl apply -f monitoring/node-exporter/
-kubectl apply -f monitoring/uptime-kuma/
-kubectl apply -f apps/hello-devops/
-kubectl apply -f runner/
+Kemudian jalankan skrip berikut (menggunakan Kustomize):
+```bash
+./apply-all.sh
+```
+
+Atau jika ingin melihat hasil *render* YAML-nya tanpa men-deploy:
+```bash
+kubectl kustomize .
 ```
 
 ## CI/CD

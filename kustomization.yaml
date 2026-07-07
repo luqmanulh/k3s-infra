@@ -1,0 +1,132 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - traefik/traefik-config.yaml
+  - traefik/traefik-deployment.yaml
+  - traefik/traefik-service.yaml
+  - traefik/traefik-ingressclass.yaml
+  - traefik/traefik-clusterrole.yaml
+  - traefik/traefik-clusterrolebinding.yaml
+  - forgejo/pvc.yaml
+  - forgejo/deployment.yaml
+  - forgejo/service.yaml
+  - forgejo/ingress.yaml
+  - forgejo/ssh-tcp-ingress.yaml
+  - monitoring/prometheus/prometheus-rbac.yaml
+  - monitoring/prometheus/prometheus-config.yaml
+  - monitoring/prometheus/prometheus-pvc.yaml
+  - monitoring/prometheus/prometheus-deployment.yaml
+  - monitoring/prometheus/prometheus-service.yaml
+  - monitoring/prometheus/prometheus-ingress.yaml
+  - monitoring/node-exporter/node-exporter.yaml
+  - monitoring/node-exporter/node-exporter-service.yaml
+  - monitoring/grafana/grafana-deployment.yaml
+  - monitoring/grafana/grafana-service.yaml
+  - monitoring/grafana/grafana-ingress.yaml
+  - monitoring/uptime-kuma/uptime-kuma-pvc.yaml
+  - monitoring/uptime-kuma/uptime-kuma-deployment.yaml
+  - monitoring/uptime-kuma/uptime-kuma-service.yaml
+  - monitoring/uptime-kuma/uptime-kuma-ingress.yaml
+  - apps/hello-devops/hello-devops-deployment.yaml
+  - apps/hello-devops/hello-devops-service.yaml
+  - apps/hello-devops/hello-devops-ingress.yaml
+  - runner/deployer-sa.yaml
+  - runner/deployer-clusterrolebinding.yaml
+  - runner/pvc.yaml
+  - runner/kubeconfig-configmap.yaml
+  - runner/deployment.yaml
+
+secretGenerator:
+  - name: grafana-secrets
+    namespace: monitoring
+    envs:
+      - secrets.env
+  - name: forgejo-secrets
+    namespace: forgejo
+    envs:
+      - secrets.env
+  - name: runner-secret
+    namespace: runner
+    envs:
+      - secrets.env
+
+configMapGenerator:
+  - name: cluster-domains
+    envs:
+      - domains.env
+
+replacements:
+  - source:
+      kind: ConfigMap
+      name: cluster-domains
+      fieldPath: data.GRAFANA_DOMAIN
+    targets:
+      - select:
+          kind: Ingress
+          name: grafana
+        fieldPaths:
+          - spec.rules.*.host
+          - spec.tls.*.hosts.*
+      - select:
+          kind: Deployment
+          name: grafana
+        fieldPaths:
+          - spec.template.spec.containers.[name=grafana].env.[name=GRAFANA_DOMAIN].value
+  - source:
+      kind: ConfigMap
+      name: cluster-domains
+      fieldPath: data.FORGEJO_DOMAIN
+    targets:
+      - select:
+          kind: Ingress
+          name: forgejo
+        fieldPaths:
+          - spec.rules.*.host
+          - spec.tls.*.hosts.*
+      - select:
+          kind: Deployment
+          name: actions-runner
+        fieldPaths:
+          - spec.template.spec.containers.[name=runner].env.[name=FORGEJO_DOMAIN].value
+      - select:
+          kind: Deployment
+          name: hello-devops
+        fieldPaths:
+          - spec.template.spec.containers.[name=hello-devops].image
+        options:
+          delimiter: "/"
+          index: 0
+  - source:
+      kind: ConfigMap
+      name: cluster-domains
+      fieldPath: data.HELLO_DOMAIN
+    targets:
+      - select:
+          kind: Ingress
+          name: hello-devops
+        fieldPaths:
+          - spec.rules.*.host
+          - spec.tls.*.hosts.*
+  - source:
+      kind: ConfigMap
+      name: cluster-domains
+      fieldPath: data.PROMETHEUS_DOMAIN
+    targets:
+      - select:
+          kind: Ingress
+          name: prometheus
+        fieldPaths:
+          - spec.rules.*.host
+          - spec.tls.*.hosts.*
+  - source:
+      kind: ConfigMap
+      name: cluster-domains
+      fieldPath: data.MONITOR_DOMAIN
+    targets:
+      - select:
+          kind: Ingress
+          name: uptime-kuma
+        fieldPaths:
+          - spec.rules.*.host
+          - spec.tls.*.hosts.*

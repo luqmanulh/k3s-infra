@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: hello-devops
-        image: git.example.com/devops-lab/hello-devops:latest
+        image: FORGEJO_DOMAIN_PLACEHOLDER/devops-lab/hello-devops:latest
         ports:
         - containerPort: 8000
           name: http
