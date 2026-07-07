@@ -64,7 +64,7 @@ replacements:
     targets:
       - select:
           kind: Ingress
-          name: grafana
+          name: grafana-ingress
         fieldPaths:
           - spec.rules.*.host
           - spec.tls.*.hosts.*
@@ -80,7 +80,7 @@ replacements:
     targets:
       - select:
           kind: Ingress
-          name: forgejo
+          name: forgejo-ingress
         fieldPaths:
           - spec.rules.*.host
           - spec.tls.*.hosts.*
@@ -104,7 +104,7 @@ replacements:
     targets:
       - select:
           kind: Ingress
-          name: hello-devops
+          name: hello-devops-ingress
         fieldPaths:
           - spec.rules.*.host
           - spec.tls.*.hosts.*
@@ -115,7 +115,7 @@ replacements:
     targets:
       - select:
           kind: Ingress
-          name: prometheus
+          name: prometheus-ingress
         fieldPaths:
           - spec.rules.*.host
           - spec.tls.*.hosts.*
@@ -126,7 +126,7 @@ replacements:
     targets:
       - select:
           kind: Ingress
-          name: uptime-kuma
+          name: uptime-kuma-ingress
         fieldPaths:
           - spec.rules.*.host
           - spec.tls.*.hosts.*
