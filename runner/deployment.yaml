@@ -35,7 +35,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: runner-secret
-              key: token
+              key: RUNNER_TOKEN
         command:
         - /bin/sh
         - -c
