@@ -13,6 +13,8 @@ spec:
       labels:
         app: actions-runner
     spec:
+      securityContext:
+        supplementalGroups: [2375]
       containers:
       - name: dind
         image: docker:dind
@@ -27,7 +29,8 @@ spec:
       - name: runner
         image: data.forgejo.org/forgejo/runner:12
         securityContext:
-          runAsUser: 0
+          runAsUser: 1000
+          runAsNonRoot: true
         env:
         - name: FORGEJO_DOMAIN
           value: FORGEJO_DOMAIN_PLACEHOLDER
