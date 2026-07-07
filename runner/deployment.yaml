@@ -21,13 +21,16 @@ spec:
           value: ""
         securityContext:
           privileged: true
+        volumeMounts:
+        - name: dind-sock
+          mountPath: /var/run
       - name: runner
         image: data.forgejo.org/forgejo/runner:12
         env:
         - name: FORGEJO_DOMAIN
           value: FORGEJO_DOMAIN_PLACEHOLDER
         - name: DOCKER_HOST
-          value: tcp://172.17.0.1:2375
+          value: unix:///var/run/docker.sock
         - name: RUNNER_TOKEN
           valueFrom:
             secretKeyRef:
@@ -37,7 +40,7 @@ spec:
         - /bin/sh
         - -c
         - |
-          until wget -qO- http://172.17.0.1:2375/_ping 2>/dev/null | grep -q OK; do sleep 1; done
+          until [ -S /var/run/docker.sock ]; do sleep 1; done
           echo "Registering runner..."
           forgejo-runner register --no-interactive \
             --instance https://$FORGEJO_DOMAIN \
@@ -52,7 +55,11 @@ spec:
           mountPath: /data
         - name: kubeconfig
           mountPath: /home/runner/.kube
+        - name: dind-sock
+          mountPath: /var/run
       volumes:
+      - name: dind-sock
+        emptyDir: {}
       - name: runner-data
         persistentVolumeClaim:
           claimName: runner-data
