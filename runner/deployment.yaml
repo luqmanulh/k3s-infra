@@ -48,8 +48,11 @@ spec:
             --name "k3s-runner-$(hostname)" \
             --labels docker \
             2>&1
+          echo "Generating config..."
+          forgejo-runner generate-config > config.yaml
+          sed -i 's|options:|options: "-v /var/run/docker.sock:/var/run/docker.sock"|' config.yaml
           echo "Starting daemon..."
-          exec forgejo-runner daemon
+          exec forgejo-runner daemon --config config.yaml
         volumeMounts:
         - name: runner-data
           mountPath: /data
