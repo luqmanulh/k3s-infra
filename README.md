@@ -32,6 +32,9 @@ k3s-infra/
 │   ├── kubeconfig-configmap.yaml
 │   ├── deployer-sa.yaml
 │   └── deployer-clusterrolebinding.yaml
+├── kustomization.yaml            # Kustomize entrypoint
+├── domains.env.example         # Template domain
+├── secrets.env.example         # Template rahasia (password, token)
 ├── apply-all.sh
 └── README.md
 ```
@@ -45,8 +48,6 @@ k3s-infra/
 | Prometheus | `https://prometheus.example.com/` |
 | Uptime Kuma | `https://monitor.example.com/` |
 | hello-devops | `https://hello.example.com/` |
-
-> Grafana login: `admin` / `ganti_password_anda`
 
 ## Deploy
 
