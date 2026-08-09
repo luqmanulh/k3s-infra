@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: uptime-kuma
+  namespace: monitoring
+  annotations:
+    tailscale.com/expose: "true"
+    tailscale.com/tags: "tag:k3s-operator"
+spec:
+  ports:
+  - name: http
+    port: 80
+    targetPort: 3001
+  selector:
+    app: uptime-kuma
+  type: ClusterIP

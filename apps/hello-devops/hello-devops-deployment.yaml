@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-devops
+  namespace: default
+  labels:
+    app: hello-devops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-devops
+  template:
+    metadata:
+      labels:
+        app: hello-devops
+    spec:
+      containers:
+      - name: hello-devops
+        image: FORGEJO_DOMAIN_PLACEHOLDER/devops-lab/hello-devops:latest
+        ports:
+        - containerPort: 8000
+          name: http
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 64Mi

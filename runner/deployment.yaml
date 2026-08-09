@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: actions-runner
+  namespace: runner
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: actions-runner
+  template:
+    metadata:
+      labels:
+        app: actions-runner
+    spec:
+      serviceAccountName: deployer
+      securityContext:
+        supplementalGroups: [2375]
+      containers:
+      - name: dind
+        image: docker:dind
+        env:
+        - name: DOCKER_TLS_CERTDIR
+          value: ""
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: dind-sock
+          mountPath: /var/run
+      - name: runner
+        image: data.forgejo.org/forgejo/runner:12
+        securityContext:
+          runAsUser: 1000
+          runAsNonRoot: true
+        env:
+        - name: FORGEJO_DOMAIN
+          value: FORGEJO_DOMAIN_PLACEHOLDER
+        - name: DOCKER_HOST
+          value: unix:///var/run/docker.sock
+        - name: RUNNER_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: runner-secret
+              key: RUNNER_TOKEN
+        command:
+        - /bin/sh
+        - -c
+        - |
+          until [ -S /var/run/docker.sock ]; do sleep 1; done
+          echo "Registering runner..."
+          forgejo-runner register --no-interactive \
+            --instance https://$FORGEJO_DOMAIN \
+            --token "$RUNNER_TOKEN" \
+            --name "k3s-runner-$(hostname)" \
+            --labels docker \
+            2>&1
+          echo "Generating config..."
+          forgejo-runner generate-config > config.yaml
+          sed -i 's|valid_volumes: \[\]|valid_volumes: ["**"]|' config.yaml
+          sed -i 's|docker_host: "-"|docker_host: "unix:///var/run/docker.sock"|' config.yaml
+          echo "Starting daemon..."
+          exec forgejo-runner daemon --config config.yaml
+        volumeMounts:
+        - name: runner-data
+          mountPath: /data
+        - name: dind-sock
+          mountPath: /var/run
+      volumes:
+      - name: dind-sock
+        emptyDir: {}
+      - name: runner-data
+        persistentVolumeClaim:
+          claimName: runner-data

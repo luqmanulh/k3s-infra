@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: traefik
+  namespace: kube-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: traefik
+  template:
+    metadata:
+      labels:
+        app: traefik
+    spec:
+      containers:
+      - name: traefik
+        image: docker.io/traefik:v3.7.4
+        args:
+        - --configFile=/config/traefik.yml
+        - --certificatesresolvers.letsencrypt.acme.email=$(TRAEFIK_ACME_EMAIL)
+        envFrom:
+        - secretRef:
+            name: traefik-secrets
+        ports:
+        - containerPort: 80
+          name: web
+        - containerPort: 443
+          name: websecure
+        - containerPort: 22
+          name: ssh
+        volumeMounts:
+        - name: config
+          mountPath: /config
+        - name: data
+          mountPath: /data
+      volumes:
+      - name: config
+        configMap:
+          name: traefik-config
+      - name: data
+        persistentVolumeClaim:
+          claimName: traefik-data
