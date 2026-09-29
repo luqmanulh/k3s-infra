@@ -27,6 +27,8 @@ spec:
           value: "1000"
         - name: USER_GID
           value: "1000"
+        - name: FORGEJO__service__DISABLE_REGISTRATION
+          value: "true"
         envFrom:
         - secretRef:
             name: forgejo-secrets
