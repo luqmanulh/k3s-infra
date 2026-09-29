@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: forgejo
-        image: data.forgejo.org/forgejo/forgejo:15
+        image: code.forgejo.org/forgejo/forgejo:16
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
