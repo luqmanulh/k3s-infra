@@ -16,6 +16,13 @@ spec:
       containers:
       - name: traefik
         image: docker.io/traefik:v3.7.4
+        resources:
+          limits:
+            cpu: 300m
+            memory: 256Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
         args:
         - --configFile=/config/traefik.yml
         - --certificatesresolvers.letsencrypt.acme.email=$(TRAEFIK_ACME_EMAIL)

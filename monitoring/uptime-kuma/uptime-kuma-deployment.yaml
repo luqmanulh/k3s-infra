@@ -18,6 +18,13 @@ spec:
       containers:
       - name: uptime-kuma
         image: louislam/uptime-kuma:2.4.0
+        resources:
+          limits:
+            cpu: 200m
+            memory: 256Mi
+          requests:
+            cpu: 50m
+            memory: 128Mi
         ports:
         - containerPort: 3001
           name: http
