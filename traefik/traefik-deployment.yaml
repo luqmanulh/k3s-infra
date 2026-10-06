@@ -13,6 +13,7 @@ spec:
       labels:
         app: traefik
     spec:
+      serviceAccountName: traefik
       containers:
       - name: traefik
         image: docker.io/traefik:v3.7.4

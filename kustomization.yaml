@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
   - namespaces.yaml
+  - traefik/traefik-sa.yaml
   - traefik/traefik-pvc.yaml
   - traefik/traefik-config.yaml
   - traefik/traefik-deployment.yaml

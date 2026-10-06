@@ -8,5 +8,5 @@ roleRef:
   name: traefik
 subjects:
 - kind: ServiceAccount
-  name: default
+  name: traefik
   namespace: kube-system
