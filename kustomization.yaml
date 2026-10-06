@@ -2,6 +2,8 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
+  - namespaces.yaml
+  - traefik/traefik-pvc.yaml
   - traefik/traefik-config.yaml
   - traefik/traefik-deployment.yaml
   - traefik/traefik-service.yaml
@@ -20,6 +22,7 @@ resources:
   - monitoring/prometheus/prometheus-service.yaml
   - monitoring/node-exporter/node-exporter.yaml
   - monitoring/node-exporter/node-exporter-service.yaml
+  - monitoring/grafana/grafana-pvc.yaml
   - monitoring/grafana/grafana-deployment.yaml
   - monitoring/grafana/grafana-service.yaml
   - monitoring/uptime-kuma/uptime-kuma-pvc.yaml
@@ -29,7 +32,7 @@ resources:
   - apps/hello-devops/hello-devops-service.yaml
   - apps/hello-devops/hello-devops-ingress.yaml
   - runner/deployer-sa.yaml
-  - runner/deployer-clusterrolebinding.yaml
+  - runner/deployer-rolebinding.yaml
   - runner/pvc.yaml
   - runner/deployment.yaml
 

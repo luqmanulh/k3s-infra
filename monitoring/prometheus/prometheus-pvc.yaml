@@ -13,4 +13,3 @@ spec:
       storage: 10Gi
   storageClassName: local-path
   volumeMode: Filesystem
-  volumeName: pvc-08f43216-cc41-4566-9cef-1ecef8c8d3c7

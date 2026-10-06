@@ -13,9 +13,10 @@ mkdir -p "$CURRENT_BACKUP"
 
 # 1. Backup state Kubernetes (Jika menggunakan SQLite default k3s)
 if [ -d "/var/lib/rancher/k3s/server/db/" ]; then
-    echo "Backup K3s State (Database)..."
-    # Menyalin database utama k3s
-    cp -r /var/lib/rancher/k3s/server/db "$CURRENT_BACKUP/k3s-db-state"
+    echo "Backup K3s State (Database) menggunakan sqlite3 aman..."
+    mkdir -p "$CURRENT_BACKUP/k3s-db-state"
+    # Menggunakan sqlite3 command agar backup aman tanpa corrupt
+    sqlite3 /var/lib/rancher/k3s/server/db/state.db ".backup '$CURRENT_BACKUP/k3s-db-state/state.db'"
 fi
 
 # 2. Backup Persistent Volumes (Data Aplikasi: Forgejo, Traefik, dsb)

@@ -18,11 +18,11 @@ spec:
         image: docker.io/traefik:v3.7.4
         resources:
           limits:
-            cpu: 300m
-            memory: 256Mi
-          requests:
-            cpu: 100m
+            cpu: 200m
             memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 64Mi
         args:
         - --configFile=/config/traefik.yml
         - --certificatesresolvers.letsencrypt.acme.email=$(TRAEFIK_ACME_EMAIL)

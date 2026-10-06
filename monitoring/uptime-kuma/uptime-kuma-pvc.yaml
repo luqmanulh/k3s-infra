@@ -13,4 +13,3 @@ spec:
       storage: 1Gi
   storageClassName: local-path
   volumeMode: Filesystem
-  volumeName: pvc-9aa734b2-ae9f-48db-8dbc-14961ccb153f
