@@ -6,13 +6,15 @@ Manifests untuk k3s cluster di VPS (`1.2.3.4`). Semua service menggunakan Let's 
 
 ```
 k3s-infra/
+├── namespaces.yaml             # Definisi Namespace K8s
 ├── traefik/                    # Traefik Ingress Controller + ACME
 │   ├── traefik-deployment.yaml
 │   ├── traefik-service.yaml
 │   ├── traefik-config.yaml
 │   ├── traefik-clusterrole.yaml
 │   ├── traefik-clusterrolebinding.yaml
-│   └── traefik-ingressclass.yaml
+│   ├── traefik-ingressclass.yaml
+│   └── traefik-pvc.yaml
 ├── forgejo/                    # Forgejo Git + Container Registry + SSH
 │   ├── deployment.yaml
 │   ├── service.yaml
@@ -30,13 +32,25 @@ k3s-infra/
 │   ├── deployment.yaml
 │   ├── pvc.yaml
 │   ├── deployer-sa.yaml
-│   └── deployer-clusterrolebinding.yaml
-├── kustomization.yaml            # Kustomize entrypoint
+│   └── deployer-rolebinding.yaml
+├── kustomization.yaml          # Kustomize entrypoint
 ├── domains.env.example         # Template domain
-├── secrets.env.example         # Template rahasia (password, token)
+├── forgejo-secrets.env.example # Template rahasia untuk Forgejo
+├── traefik-secrets.env.example # Template rahasia untuk Traefik
+├── grafana-secrets.env.example # Template rahasia untuk Grafana
+├── runner-secrets.env.example  # Template rahasia untuk Runner
 ├── apply-all.sh
 └── README.md
 ```
+
+## Security & Hardening
+Infrastruktur ini telah diamankan dan dioptimasi:
+- **Least Privilege RBAC**: Traefik dan Runner memiliki `ServiceAccount` khusus dengan hak akses terbatas.
+- **NetworkPolicy**: Membatasi akses masuk ke pod aplikasi.
+- **RunAsNonRoot**: Pod dijalankan tanpa akses root.
+- **Portable PVC**: PVC tidak terikat pada cluster tertentu.
+- **Modular Secrets**: Secret dipisah per service untuk meminimalkan dampak kebocoran kredensial.
+- **Resource Constraints**: Disesuaikan untuk berjalan pada server (e.g., 2vCPU / 4GB RAM).
 
 ## Service URLs
 
@@ -68,8 +82,11 @@ Tailscale otomatis membuatkan URL privat untuk Grafana dan Uptime Kuma berkat an
 Sebelum melakukan deploy aplikasi, pastikan Anda menyalin file environment dan mengisinya dengan kredensial yang valid:
 ```bash
 cp domains.env.example domains.env
-cp secrets.env.example secrets.env
-# Edit file domains.env dan secrets.env
+cp forgejo-secrets.env.example forgejo-secrets.env
+cp traefik-secrets.env.example traefik-secrets.env
+cp grafana-secrets.env.example grafana-secrets.env
+cp runner-secrets.env.example runner-secrets.env
+# Edit file domains.env dan semua file *-secrets.env
 ```
 
 Kemudian jalankan skrip berikut (menggunakan Kustomize):
