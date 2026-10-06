@@ -15,6 +15,9 @@ spec:
       labels:
         app: hello-devops
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
       containers:
       - name: hello-devops
         image: FORGEJO_DOMAIN_PLACEHOLDER/devops-lab/hello-devops:latest

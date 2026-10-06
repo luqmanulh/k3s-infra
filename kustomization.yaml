@@ -32,6 +32,7 @@ resources:
   - apps/hello-devops/hello-devops-deployment.yaml
   - apps/hello-devops/hello-devops-service.yaml
   - apps/hello-devops/hello-devops-ingress.yaml
+  - apps/hello-devops/hello-devops-netpol.yaml
   - runner/deployer-sa.yaml
   - runner/deployer-rolebinding.yaml
   - runner/pvc.yaml
@@ -41,19 +42,19 @@ secretGenerator:
   - name: grafana-secrets
     namespace: monitoring
     envs:
-      - secrets.env
+      - grafana-secrets.env
   - name: forgejo-secrets
     namespace: forgejo
     envs:
-      - secrets.env
+      - forgejo-secrets.env
   - name: runner-secret
     namespace: runner
     envs:
-      - secrets.env
+      - runner-secrets.env
   - name: traefik-secrets
     namespace: kube-system
     envs:
-      - secrets.env
+      - traefik-secrets.env
 
 configMapGenerator:
   - name: cluster-domains
