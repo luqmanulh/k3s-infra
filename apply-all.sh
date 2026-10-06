@@ -13,5 +13,5 @@ if [ ! -f domains.env ] || [ ! -f grafana-secrets.env ] || [ ! -f forgejo-secret
 fi
 
 echo "Applying Kustomize to k3s cluster..."
-kubectl apply -k .
+kubectl apply -k . --server-side --force-conflicts
 echo "=== Done! ==="
