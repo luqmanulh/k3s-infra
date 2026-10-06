@@ -23,7 +23,9 @@ resources:
   - monitoring/prometheus/prometheus-service.yaml
   - monitoring/node-exporter/node-exporter.yaml
   - monitoring/node-exporter/node-exporter-service.yaml
+  - monitoring/kube-state-metrics/kube-state-metrics.yaml
   - monitoring/grafana/grafana-pvc.yaml
+  - monitoring/grafana/grafana-provisioning.yaml
   - monitoring/grafana/grafana-deployment.yaml
   - monitoring/grafana/grafana-service.yaml
   - monitoring/uptime-kuma/uptime-kuma-pvc.yaml
@@ -60,6 +62,11 @@ configMapGenerator:
   - name: cluster-domains
     envs:
       - domains.env
+  - name: grafana-dashboards
+    namespace: monitoring
+    files:
+      - monitoring/grafana/dashboards/node-exporter.json
+      - monitoring/grafana/dashboards/k8s-cluster.json
 
 replacements:
   - source:
