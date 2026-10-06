@@ -66,6 +66,9 @@ configMapGenerator:
     namespace: monitoring
     files:
       - monitoring/grafana/dashboards/node-exporter.json
+      - monitoring/grafana/dashboards/k8s-views-global.json
+      - monitoring/grafana/dashboards/k8s-views-namespaces.json
+      - monitoring/grafana/dashboards/k8s-views-pods.json
 
 replacements:
   - source:
