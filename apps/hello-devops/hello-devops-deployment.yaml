@@ -18,9 +18,22 @@ spec:
       containers:
       - name: hello-devops
         image: FORGEJO_DOMAIN_PLACEHOLDER/devops-lab/hello-devops:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 8000
           name: http
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 5
+          periodSeconds: 10
         resources:
           limits:
             cpu: 200m
