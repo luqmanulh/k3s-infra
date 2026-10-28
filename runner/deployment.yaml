@@ -5,6 +5,8 @@ metadata:
   namespace: runner
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: actions-runner
@@ -19,6 +21,8 @@ spec:
       containers:
       - name: dind
         image: docker:dind
+        args:
+        - --host=unix:///var/run/docker.sock
         resources:
           limits:
             cpu: 1000m
@@ -61,13 +65,15 @@ spec:
         - -c
         - |
           until [ -S /var/run/docker.sock ]; do sleep 1; done
-          echo "Registering runner..."
-          forgejo-runner register --no-interactive \
-            --instance https://$FORGEJO_DOMAIN \
-            --token "$RUNNER_TOKEN" \
-            --name "k3s-runner-$(hostname)" \
-            --labels docker \
-            2>&1
+          if [ ! -f .runner ]; then
+            echo "Registering runner..."
+            forgejo-runner register --no-interactive \
+              --instance https://$FORGEJO_DOMAIN \
+              --token "$RUNNER_TOKEN" \
+              --name "k3s-runner-$(hostname)" \
+              --labels docker \
+              2>&1
+          fi
           echo "Generating config..."
           forgejo-runner generate-config > config.yaml
           sed -i 's|valid_volumes: \[\]|valid_volumes: ["**"]|' config.yaml

@@ -1,4 +1,13 @@
 apiVersion: traefik.io/v1alpha1
+kind: MiddlewareTCP
+metadata:
+  name: forgejo-ssh-inflight
+  namespace: forgejo
+spec:
+  inFlightConn:
+    amount: 10
+---
+apiVersion: traefik.io/v1alpha1
 kind: IngressRouteTCP
 metadata:
   generation: 1
@@ -9,6 +18,8 @@ spec:
   - ssh
   routes:
   - match: HostSNI(`*`)
+    middlewares:
+    - name: forgejo-ssh-inflight
     services:
     - name: forgejo
       port: 22

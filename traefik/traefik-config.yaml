@@ -13,6 +13,9 @@ data:
         address: ":443"
       ssh:
         address: ":22"
+        transport:
+          respondingTimeouts:
+            idleTimeout: 60s
     certificatesResolvers:
       letsencrypt:
         acme:
