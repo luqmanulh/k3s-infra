@@ -20,10 +20,10 @@ spec:
         resources:
           limits:
             cpu: 200m
-            memory: 128Mi
+            memory: 384Mi
           requests:
             cpu: 50m
-            memory: 64Mi
+            memory: 128Mi
         args:
         - --configFile=/config/traefik.yml
         - --certificatesresolvers.letsencrypt.acme.email=$(TRAEFIK_ACME_EMAIL)
