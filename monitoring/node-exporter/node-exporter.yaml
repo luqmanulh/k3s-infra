@@ -13,9 +13,6 @@ spec:
     metadata:
       labels:
         app: node-exporter
-      annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "9100"
     spec:
       hostNetwork: true
       hostPID: true
