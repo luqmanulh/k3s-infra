@@ -81,13 +81,29 @@ spec:
           name: http-metrics
         - containerPort: 8081
           name: telemetry
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: http-metrics
+          initialDelaySeconds: 10
+          periodSeconds: 15
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: http-metrics
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
         resources:
           requests:
             cpu: 10m
-            memory: 32Mi
+            memory: 48Mi
           limits:
             cpu: 50m
-            memory: 64Mi
+            memory: 128Mi
 ---
 apiVersion: v1
 kind: Service
