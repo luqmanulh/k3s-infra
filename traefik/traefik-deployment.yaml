@@ -37,6 +37,24 @@ spec:
           name: websecure
         - containerPort: 22
           name: ssh
+        - containerPort: 8080
+          name: ping
+        livenessProbe:
+          httpGet:
+            path: /ping
+            port: ping
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /ping
+            port: ping
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
         volumeMounts:
         - name: config
           mountPath: /config

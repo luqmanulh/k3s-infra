@@ -25,6 +25,7 @@ data:
         allowEmptyServices: true
     api:
       dashboard: true
+    ping: {}
     metrics:
       prometheus: true
     log:
