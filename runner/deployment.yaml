@@ -21,7 +21,8 @@ spec:
       containers:
       - name: dind
         image: docker:dind
-        args:
+        command:
+        - dockerd
         - --host=unix:///var/run/docker.sock
         resources:
           limits:
