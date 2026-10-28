@@ -89,7 +89,7 @@ data:
           - alert: ContainerMemoryNearLimit
             expr: >
               (
-                max by (namespace, pod, container) (container_memory_usage_bytes{container!="",container!="POD"})
+                max by (namespace, pod, container) (container_memory_working_set_bytes{container!="",container!="POD"})
                 / on(namespace, pod, container)
                 max by (namespace, pod, container) (kube_pod_container_resource_limits{resource="memory"})
               ) > 0.90
@@ -97,8 +97,8 @@ data:
             labels:
               severity: warning
             annotations:
-              summary: "Container {{ $labels.namespace }}/{{ $labels.pod }} ({{ $labels.container }}) memory > 90% of limit"
-              description: "Cgroup memory usage (anon + file page cache) is above 90% of its memory.max limit, risking page cache thrashing."
+              summary: "Container {{ $labels.namespace }}/{{ $labels.pod }} ({{ $labels.container }}) working set memory > 90% of limit"
+              description: "Cgroup working set memory (anon + active_file cache) is above 90% of its memory.max limit, risking page cache thrashing or OOM."
 
           - alert: ContainerHighMajorPageFaults
             expr: sum by (namespace, pod, container) (rate(container_memory_failures_total{container!="",container!="POD",failure_type="pgmajfault",scope="container"}[5m])) > 10
