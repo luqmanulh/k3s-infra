@@ -86,7 +86,28 @@ if [ -d "$BACKUP_ROOT/pv-sqlite" ]; then
     done < <(find "$BACKUP_ROOT/pv-sqlite" -type f -name "*.db" -print0)
 fi
 
-echo "7. Menyalakan kembali service K3s..."
+INFRA_DIR="/home/lnh/dev/k3s-infra"
+if [ -d "$BACKUP_ROOT/config" ]; then
+    echo "7. Me-restore file konfigurasi & environment..."
+    if [ ! -d "$INFRA_DIR" ]; then
+        mkdir -p "$INFRA_DIR"
+        cp -a "$BACKUP_ROOT/config/." "$INFRA_DIR/"
+    else
+        # Jika repo sudah di-clone, salin file .env yang belum ada
+        for env_file in "$BACKUP_ROOT/config/"*.env "$BACKUP_ROOT/config/".env*; do
+            [ -e "$env_file" ] || continue
+            base_name=$(basename "$env_file")
+            if [ ! -e "$INFRA_DIR/$base_name" ]; then
+                cp -a "$env_file" "$INFRA_DIR/"
+            fi
+        done
+    fi
+    if id lnh >/dev/null 2>&1; then
+        chown -R lnh:lnh "$INFRA_DIR"
+    fi
+fi
+
+echo "8. Menyalakan kembali service K3s..."
 systemctl start k3s
 
 echo "=== Restore Selesai! ==="
