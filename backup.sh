@@ -47,10 +47,14 @@ done
 if [ -d "/var/lib/rancher/k3s/storage" ]; then
     echo "3. Backup konsisten database SQLite di dalam PV..."
     while IFS= read -r -d '' db_file; do
-        rel_path="${db_file#/var/lib/rancher/k3s/storage/}"
-        dest_file="$CURRENT_BACKUP/pv-sqlite/$rel_path"
-        mkdir -p "$(dirname "$dest_file")"
-        sqlite3 "$db_file" ".backup '$dest_file'"
+        # Pastikan file benar-benar SQLite 3 (bukan BoltDB/BerkeleyDB/file kosong)
+        if head -c 15 "$db_file" 2>/dev/null | grep -qx "SQLite format 3"; then
+            rel_path="${db_file#/var/lib/rancher/k3s/storage/}"
+            dest_file="$CURRENT_BACKUP/pv-sqlite/$rel_path"
+            mkdir -p "$(dirname "$dest_file")"
+            echo "   -> $rel_path"
+            sqlite3 "$db_file" ".backup '$dest_file'"
+        fi
     done < <(find /var/lib/rancher/k3s/storage -type f -name "*.db" -print0)
 
     echo "4. Mengarsipkan Application Data (Persistent Volumes)..."
