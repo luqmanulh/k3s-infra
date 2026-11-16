@@ -40,6 +40,8 @@ k3s-infra/
 ├── grafana-secrets.env.example # Template rahasia untuk Grafana
 ├── runner-secrets.env.example  # Template rahasia untuk Runner
 ├── apply-all.sh
+├── backup.sh                   # Backup K3s state, PV, & konfigurasi
+├── restore.sh                  # Restore K3s di VPS baru (auto-install k3s)
 └── README.md
 ```
 
@@ -57,9 +59,9 @@ Infrastruktur ini telah diamankan dan dioptimasi:
 | Service | URL | Akses |
 |---------|-----|-------|
 | Forgejo | `https://git.example.com/` | Publik |
-| Grafana | Dibuat otomatis oleh Tailscale (mis: `https://grafana...ts.net/`) | Privat (Tailscale VPN) |
-| Prometheus | `http://prometheus:9090` | Internal Cluster |
-| Uptime Kuma | Dibuat otomatis oleh Tailscale (mis: `https://uptime...ts.net/`) | Privat (Tailscale VPN) |
+| Grafana | `http://monitoring-grafana` (atau IP Tailscale) | Privat (Tailscale VPN) |
+| Prometheus | `http://prometheus.monitoring.svc.cluster.local:9090` | Internal Cluster |
+| Uptime Kuma | `http://monitoring-uptime-kuma` (atau IP Tailscale) | Privat (Tailscale VPN) |
 | hello-devops | `https://hello.example.com/` | Publik |
 
 ## Prasyarat: Tailscale Operator (Keamanan Monitoring)
@@ -98,6 +100,25 @@ Atau jika ingin melihat hasil *render* YAML-nya tanpa men-deploy:
 ```bash
 kubectl kustomize .
 ```
+
+## Backup & Restore
+
+### Backup (di VPS)
+Menyimpan state SQLite K3s, kredensial cluster (`tls`, `cred`, `token`), seluruh PV aplikasi (termasuk snapshot konsisten SQLite seperti `kuma.db`), serta manifest & file `*.env` ke `~/k3s-backups/`:
+```bash
+sudo ./backup.sh
+```
+Salin hasil backup ke komputer lokal (off-site) agar aman jika VPS dihapus:
+```bash
+scp vps:~/k3s-backups/k3s-full-backup-*.tar.gz ~/backups/
+```
+
+### Restore (di VPS Ubuntu Baru)
+`restore.sh` otomatis menginstall `sqlite3`, `curl`, dan `k3s` jika belum terpasang, memulihkan database, PV, serta `config/` + `~/.kube/config`:
+```bash
+sudo ./restore.sh ~/k3s-full-backup-TANGGAL.tar.gz
+```
+> Jika VPS baru memiliki IP publik baru, perbarui DNS record domain publik Anda ke IP baru tersebut dan pastikan Tailscale di host sudah aktif (`tailscale up`).
 
 ## CI/CD
 
