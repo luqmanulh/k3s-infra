@@ -10,8 +10,13 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 if ! command -v sqlite3 >/dev/null 2>&1; then
-    echo "Gagal: sqlite3 belum terpasang. Install dulu dengan: sudo apt-get install -y sqlite3"
-    exit 1
+    if command -v apt-get >/dev/null 2>&1; then
+        echo "sqlite3 belum terpasang, menginstall sqlite3..."
+        apt-get update -qq && apt-get install -y -qq sqlite3
+    else
+        echo "Gagal: sqlite3 belum terpasang. Install dulu secara manual."
+        exit 1
+    fi
 fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

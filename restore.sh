@@ -23,6 +23,18 @@ if [ ! -f "$BACKUP_FILE" ]; then
     exit 1
 fi
 
+if ! command -v sqlite3 >/dev/null 2>&1 || ! command -v curl >/dev/null 2>&1; then
+    if command -v apt-get >/dev/null 2>&1; then
+        echo "0. Menginstall dependensi yang kurang (sqlite3/curl)..."
+        apt-get update -qq && apt-get install -y -qq sqlite3 curl
+    fi
+fi
+
+if ! command -v k3s >/dev/null 2>&1; then
+    echo "0. K3s belum terpasang, menginstall K3s..."
+    curl -sfL https://get.k3s.io | sh -
+fi
+
 TEMP_DIR=$(mktemp -d)
 cleanup() {
     rm -rf "$TEMP_DIR"
@@ -35,7 +47,9 @@ EXTRACTED_DIR=$(ls -1 "$TEMP_DIR" | head -n 1)
 BACKUP_ROOT="$TEMP_DIR/$EXTRACTED_DIR"
 
 echo "2. Mematikan service K3s (mencegah data korup saat restore)..."
-systemctl stop k3s
+if systemctl is-active --quiet k3s; then
+    systemctl stop k3s
+fi
 
 echo "3. Me-restore Kubernetes State Database..."
 if [ -d "$BACKUP_ROOT/k3s-db-state" ]; then
@@ -109,6 +123,18 @@ fi
 
 echo "8. Menyalakan kembali service K3s..."
 systemctl start k3s
+
+for _ in $(seq 1 30); do
+    [ -f /etc/rancher/k3s/k3s.yaml ] && break
+    sleep 1
+done
+if [ -f /etc/rancher/k3s/k3s.yaml ] && [ -n "${TARGET_HOME:-}" ]; then
+    mkdir -p "$TARGET_HOME/.kube"
+    cp /etc/rancher/k3s/k3s.yaml "$TARGET_HOME/.kube/config"
+    chmod 600 "$TARGET_HOME/.kube/config"
+    chown -R "$TARGET_USER:$TARGET_USER" "$TARGET_HOME/.kube"
+    echo "   -> kubeconfig disalin ke $TARGET_HOME/.kube/config"
+fi
 
 echo "=== Restore Selesai! ==="
 echo "Mohon tunggu beberapa menit hingga Kubernetes selesai booting dan mengaktifkan kembali semua Pod."
