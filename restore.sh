@@ -86,7 +86,9 @@ if [ -d "$BACKUP_ROOT/pv-sqlite" ]; then
     done < <(find "$BACKUP_ROOT/pv-sqlite" -type f -name "*.db" -print0)
 fi
 
-INFRA_DIR="/home/lnh/dev/k3s-infra"
+TARGET_USER="${SUDO_USER:-$USER}"
+TARGET_HOME="$(getent passwd "$TARGET_USER" | cut -d: -f6)"
+INFRA_DIR="${INFRA_DIR:-$TARGET_HOME/dev/k3s-infra}"
 if [ -d "$BACKUP_ROOT/config" ]; then
     echo "7. Me-restore file konfigurasi & environment..."
     if [ ! -d "$INFRA_DIR" ]; then
@@ -102,9 +104,7 @@ if [ -d "$BACKUP_ROOT/config" ]; then
             fi
         done
     fi
-    if id lnh >/dev/null 2>&1; then
-        chown -R lnh:lnh "$INFRA_DIR"
-    fi
+    chown -R "$TARGET_USER:$TARGET_USER" "$INFRA_DIR"
 fi
 
 echo "8. Menyalakan kembali service K3s..."

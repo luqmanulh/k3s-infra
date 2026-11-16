@@ -14,9 +14,12 @@ if ! command -v sqlite3 >/dev/null 2>&1; then
     exit 1
 fi
 
-BACKUP_DIR="${BACKUP_DIR:-/root/k3s-backups}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TARGET_USER="${SUDO_USER:-$USER}"
+TARGET_HOME="$(getent passwd "$TARGET_USER" | cut -d: -f6)"
+BACKUP_DIR="${BACKUP_DIR:-$TARGET_HOME/k3s-backups}"
 RETENTION_COUNT="${RETENTION_COUNT:-5}"
-INFRA_DIR="/home/lnh/dev/k3s-infra"
+INFRA_DIR="${INFRA_DIR:-$SCRIPT_DIR}"
 DATE=$(date +%Y-%m-%d_%H-%M-%S)
 CURRENT_BACKUP="$BACKUP_DIR/$DATE"
 
@@ -73,6 +76,9 @@ fi
 echo "6. Mengompresi hasil backup..."
 ARCHIVE_PATH="$BACKUP_DIR/k3s-full-backup-$DATE.tar.gz"
 tar -czf "$ARCHIVE_PATH" -C "$BACKUP_DIR" "$DATE"
+chmod 700 "$BACKUP_DIR"
+chmod 600 "$ARCHIVE_PATH"
+chown "$TARGET_USER:$TARGET_USER" "$BACKUP_DIR" "$ARCHIVE_PATH"
 
 echo "7. Membersihkan backup lama (menyimpan $RETENTION_COUNT backup terbaru)..."
 ls -1t "$BACKUP_DIR"/k3s-full-backup-*.tar.gz 2>/dev/null | tail -n +$((RETENTION_COUNT + 1)) | xargs -r rm -f
